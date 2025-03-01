@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "pipes-py"
+version = "1.0.0"
+readme = "README.md"
+description = "Basically pipes.sh but rewritten in Python"
+authors = ["Reidho Satria <me@rei.my.id>"]
+packages = [{include = "pipes/py", from = "src"}]
+
+[tool.poetry.scripts]
+pipes-py = "pipes.py.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
