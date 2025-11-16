@@ -1,3 +1,6 @@
 dist/
 .ropeproject/
 __pycache__/
+.ruff_cache/
+.mypy_cache/
+.venv/

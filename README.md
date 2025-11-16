@@ -1,69 +1,108 @@
-# Pipes.py
-A Python implementation of the classic pipes.sh. Watch colorful pipes grow and spread across your terminal in mesmerizing patterns.
+# pipes.py
 
+A Python implementation of the classic [pipes.sh](https://github.com/pipeseroni/pipes.sh). Watch colorful pipes grow and spread across your terminal in mesmerizing patterns.
 
-![Python](https://img.shields.io/badge/PYTHON-3.X-bf616a?style=flat-square) ![License](https://img.shields.io/badge/LICENCE-CC%20BY%20SA%204.0-ebcb8b?style=flat-square) ![Version](https://img.shields.io/badge/VERSION-1.0.0-a3be8c?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square) ![License](https://img.shields.io/badge/License-CC--BY--SA--4.0-green?style=flat-square) ![Version](https://img.shields.io/badge/Version-2.0.0-orange?style=flat-square)
 
 [![Buy Me a Coffee](https://img.shields.io/badge/BUY%20ME%20A%20COFFEE-79B8CA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/ReidhoSatria) [![Traktir Saya Kopi](https://img.shields.io/badge/TRAKTIR%20SAYA%20KOPI-FAC76C?style=for-the-badge&logo=BuyMeACoffee&logoColor=black)](https://saweria.co/elliottophellia)
 
+## What's new in v2.0.0 ?!
 
-## Features
+Major rewrite. Here's what changed:
 
-- Multiple pipe styles (10 different types)
-- Customizable colors and animations
-- Adjustable speed and steadiness
-- Configuration saving
-- Bold and color options
-- Random start positions
+**Tooling:**
+- Poetry → uv
+- Added mypy (strict type checking)
+- Added ruff (linter)
+- Reorganized from `src/pipes/py/` to `src/pipes/`
 
-## Installation
+**Code:**
+- Split into modules instead of one big file
+- Full type hints
+- Better architecture
 
-### Release
+**Breaking:**
+- Needs Python 3.10+
+- Module path changed (but CLI is same)
+
+All CLI arguments work the same. Config format is backwards compatible.
+
+## Install
+
 ```bash
-# Install using pipx
-pipx install pipes-py
+pip install pipes-py
 ```
 
-### Build from Source
+Build from source:
+
 ```bash
-# Clone the repository
 git clone https://github.com/elliottophellia/pipes.py
-
-# Change directory
 cd pipes.py
-
-# Build the package
-poetry build
-
-# Install the package
-pipx install dist/pipes_py-1.0.0.tar.gz
+uv build
+pip install dist/pipes_py-2.0.0-py3-none-any.whl
 ```
 
 ## Usage
 
 ```bash
-pipes-py
+pipes-py                    # basic
+pipes-py -p 5 -f 60         # 5 pipes at 60 fps
+pipes-py -R -P 2            # random start with curved pipes
+pipes-py -p 3 -C -B         # 3 pipes, no color, no bold
 ```
 
-### Command Line Options
+## Options
 
-- `-p, --pipes N`: Set number of pipes (default: 1)
-- `-f, --fps N`: Set frames per second (20-100, default: 75)
-- `-s, --steady N`: Set steadiness (5-15, default: 13)
-- `-r, --limit N`: Set character limit before reset
-- `-R, --random`: Enable random start positions
-- `-B, --no-bold`: Disable bold characters
-- `-C, --no-color`: Disable colors
-- `-P N, --pipe-style N`: Set pipe style (0-9)
-- `-K, --keep-style`: Keep pipe style when wrapping
-- `-S, --save-config`: Save current settings as default
-- `-v, --version`: Show version information
+```
+-p, --pipes N         number of pipes (default: 1)
+-f, --fps N           frames per second, 20-100 (default: 75)
+-s, --steady N        steadiness, 5-15 (default: 13)
+-r, --limit N         character limit before screen reset
+-R, --random          start pipes at random positions
+-B, --no-bold         disable bold characters
+-C, --no-color        disable colors
+-P N                  pipe style 0-9 (default: 0)
+-K, --keep-style      keep pipe style when wrapping around screen
+-S, --save-config     save current settings as default
+-v, --version         show version
+```
 
-## Configuration
+Quit with `?` or `ESC`.
 
-The program stores its configuration in `~/.config/pipes-py/config.json`. You can modify this file directly or use the `-S` option to save your current settings.
+### Interactive keys
 
-Default configuration:
+While running:
+- `O` - decrease steadiness (more turns)
+- `P` - increase steadiness (fewer turns)
+- `D` - decrease FPS (slower)
+- `F` - increase FPS (faster)
+- `B` - toggle bold
+- `C` - toggle color
+- `K` - toggle keep style on wrap
+
+## Pipe styles
+
+10 styles available:
+
+- `0` - heavy box-drawing (┃┏┓┛━)
+- `1` - curved (│╭╮╯─)
+- `2` - light box-drawing (│┌┐┘─)
+- `3` - double box-drawing (║╔╗╝═)
+- `4` - knobby (|+-+)
+- `5` - angles (|/\-\)
+- `6` - dots (.o...)
+- `7` - dots with o (.ooo.)
+- `8` - slashes (-\/|)
+- `9` - mixed Unicode (╿┍┑┚╼)
+
+Try them: `pipes-py -P 1 -p 3`
+
+## Config
+
+Config location:
+- Linux/macOS: `~/.config/pipes-py/config.json`
+- Windows: `%LOCALAPPDATA%\pipes-py\config.json`
+
 ```json
 {
   "pipes": 1,
@@ -79,6 +118,31 @@ Default configuration:
 }
 ```
 
+Use `-S` to save current settings or edit the file directly.
+
+## Dev
+
+```bash
+git clone https://github.com/elliottophellia/pipes.py
+cd pipes.py
+uv sync
+uv run python -m pipes
+
+# checks
+uv run ruff check src/pipes
+uv run mypy src/pipes
+
+# build
+uv build
+```
+
+Code is in `src/pipes/`:
+- `types.py` - enums/dataclasses
+- `config.py` - file I/O
+- `renderer.py` - drawing
+- `pipes.py` - state
+- `__main__.py` - CLI
+
 ## License
 
 This project is licensed under the Creative Commons Attribution Share Alike 4.0 International (CC-BY-SA-4.0). For more information, please refer to the [LICENSE](LICENSE) file included in this repository.
@@ -89,6 +153,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+3. Write your amazing code
+4. Make sure pass `ruff check` and `mypy` first
+5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+6. Push to the branch (`git push origin feature/AmazingFeature`)
+7. Open a Pull Request
