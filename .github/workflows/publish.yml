@@ -12,29 +12,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-
-      - name: Configure Poetry
-        run: |
-          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+      - name: Install Python
+        run: uv python install
 
       - name: Install dependencies
-        run: poetry install
+        run: uv sync --frozen
 
       - name: Build package
-        run: poetry build
+        run: uv build
 
       - name: Get version from pyproject.toml
         id: get_version
         run: |
-          VERSION=$(poetry version -s)
+          VERSION=$(grep '^version = ' pyproject.toml | cut -d '"' -f 2)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create GitHub Release
@@ -51,7 +44,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to PyPI
-        run: poetry publish
+        run: uv publish --token ${{ secrets.PYPI_TOKEN }}
 
 permissions:
   contents: write
